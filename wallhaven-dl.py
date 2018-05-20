@@ -93,7 +93,7 @@ def latest():
 def search():
     query = input('Enter search query: ')
     searchurl = 'https://alpha.wallhaven.cc/search?q=' + \
-        urllib.parse.quote_plus(query) + '&page='
+        urllib.parse.quote_plus(query) + '&categories=001&purity=100&atleast=2560x1600&ratios=16x10&sorting=relevance&order=desc&page='
     return (searchurl, dict())
 
 def main():
@@ -143,7 +143,7 @@ def main():
                                 imageFile.write(chunk)
                         break
                 else:
-                    print("%s already exist - %s / %s" % os.path.basename(iurl), currentImage , totalImage)
+                    print("%s already exist - %s / %s" % (os.path.basename(iurl), currentImage , totalImage))
 
 if __name__ == '__main__':
     main()
