@@ -117,8 +117,13 @@ def main():
         BASEURL, cookies = search()
 
     pgid = int(input('How Many pages you want to Download: '))
-    print('Number of Wallpapers to Download: ' + str(24 * pgid))
-    for j in range(1, pgid + 1):
+    startpg = int(input('Start page to begin download: '))
+    if startpg > pgid:
+        print("Can download when number of pages less than start page ")
+        return
+
+    print('Number of Wallpapers to Download: ' + str(24 * (pgid-startpg+1)))
+    for j in range(startpg, pgid + 1):
         totalImage = str(24 * pgid)
         url = BASEURL + str(j)
         urlreq = requests.get(url, cookies=cookies)
@@ -129,8 +134,7 @@ def main():
         imgext = ['jpg', 'png', 'bmp']
         for i in range(len(imgid)):
             currentImage = (((j - 1) * 24) + (i + 1))
-            url = 'http://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-%s.' % imgid[
-                i]
+            url = 'http://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-%s.' % imgid[i]
             for ext in imgext:
                 iurl = url + ext
                 osPath = os.path.join('Wallhaven', os.path.basename(iurl))
