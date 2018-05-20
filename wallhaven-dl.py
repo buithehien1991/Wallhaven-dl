@@ -3,9 +3,10 @@
 #                  alpha.wallhaven.cc                  #
 #                                                      #
 #                 Author - Saurabh Bhan                #
+#                 Updater - Bui The Hien               #
 #                                                      #
 #                  dated- 26 June 2016                 #
-#                 Update - 29 June 2016                #
+#                 Update - 20 May 2018                 #
 ########################################################
 
 import os
