@@ -19,6 +19,78 @@ import urllib
 
 os.makedirs('Wallhaven', exist_ok=True)
 
+def build_params():
+    params = ''
+    print('''****************************************************************
+                            Category Codes
+
+    all     - Every wallpaper.
+    general - For 'general' wallpapers only.
+    anime   - For 'Anime' Wallpapers only.
+    people  - For 'people' wallapapers only.
+    ga      - For 'General' and 'Anime' wallapapers only.
+    gp      - For 'General' and 'People' wallpapers only.
+    ****************************************************************
+    ''')
+    ccode = input('Enter Category: ')
+    ALL = '111'
+    ANIME = '010'
+    GENERAL = '100'
+    PEOPLE = '001'
+    GENERAL_ANIME = '110'
+    GENERAL_PEOPLE = '101'
+    if ccode.lower() == "all":
+        ctag = ALL
+    elif ccode.lower() == "anime":
+        ctag = ANIME
+    elif ccode.lower() == "general":
+        ctag = GENERAL
+    elif ccode.lower() == "people":
+        ctag = PEOPLE
+    elif ccode.lower() == "ga":
+        ctag = GENERAL_ANIME
+    elif ccode.lower() == "gp":
+        ctag = GENERAL_PEOPLE
+
+    params += "&categories=" + ctag
+
+    print('''
+    ****************************************************************
+                            Purity Codes
+
+    sfw     - For 'Safe For Work'
+    sketchy - For 'Sketchy'
+    nsfw    - For 'Not Safe For Work'
+    ws      - For 'SFW' and 'Sketchy'
+    wn      - For 'SFW' and 'NSFW'
+    sn      - For 'Sketchy' and 'NSFW'
+    all     - For 'SFW', 'Sketchy' and 'NSFW'
+    ****************************************************************
+    ''')
+    pcode = input('Enter Purity: ')
+    ptags = {'sfw':'100', 'sketchy':'010', 'nsfw':'001', 'ws':'110', 'wn':'101', 'sn':'011', 'all':'111'}
+    ptag = ptags[pcode]
+
+    params += "&purity=" + ptag
+
+    rtag = input('Enter at least resolution (ex: 1280x720): ')
+    if rtag:
+        params += "&atleast=" + rtag 
+
+    ratio = input("Enter ratio (16x9): ")
+    if ratio:
+        params += "&ratios=" + ratio
+
+    stag = input('Enter sort type: relevance, random, date_added, views, favorites, toplist: ')
+    if stag:
+        params += "&sorting=" + stag
+
+    otag = input('Enter order of sort: desc, asc: ')
+    if otag:
+        params += "&order=" + otag
+
+    return params
+
 def login():
     print('NSFW images require login')
     username = input('Enter username: ')
@@ -93,7 +165,7 @@ def latest():
 def search():
     query = input('Enter search query: ')
     searchurl = 'https://alpha.wallhaven.cc/search?q=' + \
-        urllib.parse.quote_plus(query) + '&categories=001&purity=100&atleast=2560x1600&ratios=16x10&sorting=relevance&order=desc&page='
+        urllib.parse.quote_plus(query) + build_params() + '&page='
     return (searchurl, dict())
 
 def main():
