@@ -14,9 +14,9 @@ import getpass
 import bs4
 import re
 import requests
-import tqdm
 import time
-import urllib 
+import urllib
+import math
 
 os.makedirs('Wallhaven', exist_ok=True)
 
@@ -76,7 +76,7 @@ def build_params():
 
     rtag = input('Enter at least resolution (ex: 1280x720): ')
     if rtag:
-        params += "&atleast=" + rtag 
+        params += "&atleast=" + rtag
 
     ratio = input("Enter ratio (16x9): ")
     if ratio:
@@ -169,6 +169,9 @@ def search():
         urllib.parse.quote_plus(query) + build_params() + '&page='
     return (searchurl, dict())
 
+from tqdm import tqdm
+from math import *
+
 def main():
     Choice = input('''Choose how you want to download the image:
 
@@ -199,6 +202,7 @@ def main():
     for j in range(startpg, pgid + 1):
         totalImage = str(24 * pgid)
         url = BASEURL + str(j)
+        print('Starting download page: ' + str(j) + ', url: ' + url);
         urlreq = requests.get(url, cookies=cookies)
         soup = bs4.BeautifulSoup(urlreq.text, 'lxml')
         soupid = soup.findAll('a', {'class': 'preview'})
@@ -212,11 +216,12 @@ def main():
                 iurl = url + ext
                 osPath = os.path.join('Wallhaven', os.path.basename(iurl))
                 if not os.path.exists(osPath):
-                    imgreq = requests.get(iurl, cookies=cookies)
+                    imgreq = requests.get(iurl, cookies=cookies, stream=True)
                     if imgreq.status_code == 200:
                         print("Downloading : %s - %s / %s" % ((os.path.basename(iurl)), currentImage , totalImage))
+                        total_size = int(imgreq.headers.get('content-length', 0))
                         with open(osPath, 'ab') as imageFile:
-                            for chunk in imgreq.iter_content(1024):
+                            for chunk in tqdm(imgreq.iter_content(1024), total=math.ceil(total_size/1024), unit='KB', unit_scale=True):
                                 imageFile.write(chunk)
                         break
                 else:
